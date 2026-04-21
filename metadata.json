@@ -1,0 +1,6 @@
+{
+  "name": "握笔姿势识别矫正系统",
+  "description": "基于视觉AI的大创项目展示原型，实时判定8种错误握笔姿势并给出矫正建议。采用现代科技玻璃拟态风格设计。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

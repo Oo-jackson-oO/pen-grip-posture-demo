@@ -1,0 +1,311 @@
+{
+  "version": "2.4.4",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "penHand",
+      "score": null,
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1041.0,
+          0.0
+        ],
+        [
+          1041.0,
+          1409.0
+        ],
+        [
+          0.0,
+          1409.0
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "difficult": false,
+      "shape_type": "rectangle",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "0.WRIST",
+      "score": null,
+      "points": [
+        [
+          1032.6666666666667,
+          785.0
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "1.THUMB_CMC",
+      "score": null,
+      "points": [
+        [
+          982.6666666666666,
+          641.6666666666667
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "2.THUMB_MCP",
+      "score": null,
+      "points": [
+        [
+          716.0,
+          791.6666666666667
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "3.THUMB_IP",
+      "score": null,
+      "points": [
+        [
+          442.66666666666663,
+          965.0
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "4.THUMB_TIP",
+      "score": null,
+      "points": [
+        [
+          227.66666666666663,
+          1093.3333333333335
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "5.INDEX_FINGER_MCP",
+      "score": null,
+      "points": [
+        [
+          422.66666666666663,
+          485.0
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "6.INDEX_FINGER_PIP",
+      "score": null,
+      "points": [
+        [
+          97.66666666666661,
+          676.6666666666667
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "7.INDEX_FINGER_DIP",
+      "score": null,
+      "points": [
+        [
+          109.33333333333327,
+          868.3333333333334
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "8.INDEX_FINGER_TIP",
+      "score": null,
+      "points": [
+        [
+          174.3333333333333,
+          1065.0
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "9.MIDDLE_FINGER_MCP",
+      "score": null,
+      "points": [
+        [
+          375.99999999999994,
+          778.3333333333334
+        ]
+      ],
+      "group_id": 1,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "10.MIDDLE_FINGER_PIP",
+      "score": null,
+      "points": [
+        [
+          214.3333333333333,
+          911.6666666666667
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "11.MIDDLE_FINGER_DIP",
+      "score": null,
+      "points": [
+        [
+          184.3333333333333,
+          1110.0
+        ]
+      ],
+      "group_id": 1,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "12.MIDDLE_FINGER_TIP",
+      "score": null,
+      "points": [
+        [
+          322.66666666666663,
+          1256.6666666666667
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "16.RING_FINGER_TIP",
+      "score": null,
+      "points": [
+        [
+          470.99999999999994,
+          1245.0
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "pen1",
+      "score": null,
+      "points": [
+        [
+          162.66666666666663,
+          1400.0
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    },
+    {
+      "label": "pen2",
+      "score": null,
+      "points": [
+        [
+          497.66666666666663,
+          18.333333333333336
+        ]
+      ],
+      "group_id": 2,
+      "description": "",
+      "difficult": false,
+      "shape_type": "point",
+      "flags": {},
+      "attributes": {},
+      "kie_linking": []
+    }
+  ],
+  "imagePath": "hand1(17)_penHand_0_conf0.93.jpg",
+  "imageData": null,
+  "imageHeight": 1410,
+  "imageWidth": 1042
+}

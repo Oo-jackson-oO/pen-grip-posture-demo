@@ -78,11 +78,14 @@ const playFeedbackSound = (isCorrect: boolean) => {
 
 // Helper to generate the 21 keypoints for different postures
 const getHandPose = (type: PostureId): number[][] => {
-  return postureKeypoints[type] || postureKeypoints['correct'];
+  return postureKeypoints[type]?.points || postureKeypoints['correct'].points;
 };
 
 // SVG Hand Rendering Component
 function MockVisualizer({ postureId, isCorrect, name }: { postureId: PostureId, isCorrect: boolean, name: string }) {
+  const currentKeypoints = postureKeypoints[postureId] || postureKeypoints['correct'];
+  const { width: w, height: h, image } = currentKeypoints;
+
   const [basePts, setBasePts] = useState(getHandPose(postureId));
   const basePtsRef = React.useRef(basePts);
   basePtsRef.current = basePts;
@@ -140,22 +143,20 @@ function MockVisualizer({ postureId, isCorrect, name }: { postureId: PostureId, 
     [0,17] // Palm
   ];
 
-  const minX = Math.min(...pts.map(p => p[0])) - 0.08;
-  const maxX = Math.max(...pts.map(p => p[0])) + 0.08;
-  const minY = Math.min(...pts.map(p => p[1])) - 0.08;
-  const maxY = Math.max(...pts.map(p => p[1])) + 0.08;
+  const minX = Math.min(...pts.map(p => p[0])) - 0.05;
+  const maxX = Math.max(...pts.map(p => p[0])) + 0.05;
+  const minY = Math.min(...pts.map(p => p[1])) - 0.05;
+  const maxY = Math.max(...pts.map(p => p[1])) + 0.05;
 
   const boxColor = isCorrect ? '#22c55e' : '#f43f5e';
   const boxClass = isCorrect ? 'stroke-green-500/80 shadow-green-500' : 'stroke-rose-500/80 shadow-rose-500';
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden">
-      {/* Target Crosshairs */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-        <Crosshair className="w-1/2 h-1/2 text-cyan-400 stroke-1" />
-      </div>
-
-      <svg className="w-full h-full absolute inset-0 z-10">
+    <div className="absolute inset-0 w-full h-full bg-black flex items-center justify-center overflow-hidden">
+      {/* Background ambient match */}
+      <div className="absolute inset-0 opacity-20 blur-2xl transition-all duration-700" style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', transform: 'scale(1.1)' }} />
+      
+      <svg className="w-full h-full relative z-10 drop-shadow-lg" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="xMidYMid meet">
         <style>{`
           @keyframes glow-pulse-green {
             0%, 100% { filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.4)); }
@@ -168,19 +169,25 @@ function MockVisualizer({ postureId, isCorrect, name }: { postureId: PostureId, 
             transition: stroke 400ms ease, fill 400ms ease, color 400ms ease;
           }
         `}</style>
+        
+        {/* Source Image */}
+        <image href={image} x="0" y="0" width={w} height={h} />
+        
+        {/* Darken overlay for contrast */}
+        <rect x="0" y="0" width={w} height={h} fill="rgba(0,0,0,0.15)" className="pointer-events-none" />
 
         {/* Bounding Box */}
         <rect
-          x={`${minX * 100}%`} y={`${minY * 100}%`}
-          width={`${(maxX - minX) * 100}%`} height={`${(maxY - minY) * 100}%`}
-          className={`fill-none stroke-[2px] border-dashed color-transition ${boxClass}`}
-          strokeDasharray="8 6"
+          x={minX * w} y={minY * h}
+          width={(maxX - minX) * w} height={(maxY - minY) * h}
+          className={`fill-none stroke-[3px] border-dashed color-transition ${boxClass}`}
+          strokeDasharray="12 8"
         />
         
         {/* Label Tag */}
-        <g style={{ transform: `translate(${minX * 100}%, ${(minY * 100)}%)` }}>
-          <rect x="0" y="-24" width="160" height="24" fill={boxColor} opacity="0.9" className="color-transition" />
-          <text x="8" y="-7" className="fill-white text-[12px] font-mono tracking-wider font-bold color-transition">
+        <g style={{ transform: `translate(${minX * w}px, ${(minY * h)}px)` }}>
+          <rect x="0" y="-36" width="220" height="36" fill={boxColor} opacity="0.9" className="color-transition" />
+          <text x="12" y="-12" className="fill-white text-[16px] font-mono tracking-wider font-bold color-transition">
             {isCorrect ? `POSE: PASS (98.4%)` : `ERR: ${name}`}
           </text>
         </g>
@@ -191,11 +198,11 @@ function MockVisualizer({ postureId, isCorrect, name }: { postureId: PostureId, 
           {conn.map(([start, end], idx) => (
             <line
               key={`line-${idx}`}
-              x1={`${pts[start][0] * 100}%`}
-              y1={`${pts[start][1] * 100}%`}
-              x2={`${pts[end][0] * 100}%`}
-              y2={`${pts[end][1] * 100}%`}
-              className={isCorrect ? "stroke-green-400 opacity-90 stroke-[3px] color-transition" : "stroke-[#165DFF] opacity-80 stroke-[3px] color-transition"}
+              x1={pts[start][0] * w}
+              y1={pts[start][1] * h}
+              x2={pts[end][0] * w}
+              y2={pts[end][1] * h}
+              className={isCorrect ? "stroke-green-400 opacity-90 stroke-[5px] color-transition" : "stroke-[#165DFF] opacity-90 stroke-[5px] color-transition"}
             />
           ))}
 
@@ -203,19 +210,20 @@ function MockVisualizer({ postureId, isCorrect, name }: { postureId: PostureId, 
           {pts.map((p, idx) => (
             <circle
               key={`pt-${idx}`}
-              cx={`${p[0] * 100}%`}
-              cy={`${p[1] * 100}%`}
-              r={idx === 0 ? "5" : "3.5"}
+              cx={p[0] * w}
+              cy={p[1] * h}
+              r={idx === 0 ? "8" : "6"}
               className={
                 (idx === 0 
-                  ? (isCorrect ? "fill-white stroke-green-500 stroke-2" : "fill-white stroke-[#165DFF] stroke-2")
-                  : (isCorrect ? "fill-slate-900 stroke-green-300 stroke-2" : "fill-slate-900 stroke-cyan-400 stroke-2"))
+                  ? (isCorrect ? "fill-white stroke-green-500 stroke-[3px]" : "fill-white stroke-[#165DFF] stroke-[3px]")
+                  : (isCorrect ? "fill-slate-900 stroke-green-300 stroke-[3px]" : "fill-slate-900 stroke-cyan-400 stroke-[3px]"))
                 + " color-transition"
               }
             />
           ))}
         </g>
       </svg>
+
 
       {/* Aesthetic Scanning Line overlay */}
       <motion.div
@@ -230,32 +238,45 @@ function MockVisualizer({ postureId, isCorrect, name }: { postureId: PostureId, 
 export default function App() {
   const [activePostureId, setActivePostureId] = useState<PostureId>('correct');
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs, setLogs] = useState<{msg: string, level: 'INFO' | 'WARN'}[]>([]);
+  const [logsExpanded, setLogsExpanded] = useState(false);
 
   const activeData = useMemo(() => postureData.find(p => p.id === activePostureId)!, [activePostureId]);
+
+  const addLog = (msg: string, level: 'INFO'|'WARN' = 'INFO') => {
+    setLogs(curr => {
+      const timeStr = new Date().toISOString().substring(11, 23);
+      const newLogs = [...curr, { msg: `[${timeStr}] [${level}] ${msg}`, level }];
+      if (newLogs.length > 50) return newLogs.slice(newLogs.length - 50);
+      return newLogs;
+    });
+  };
 
   // Mock Terminal Logs
   useEffect(() => {
     const msgs = [
-      "[SYS] 视频推流正常运行 - H.264 解码",
-      "[AI] YOLOv8-pose 关键点推断耗时: 22ms",
-      "[INFO] 姿态边界框坐标已更新",
-      "[NET] 骨骼关键点结构渲染同步完成",
-      "[SYS] 内存使用率稳定在 340MB"
+      "[WARN] 视频流部分帧丢失，尝试恢复解码缓冲",
+      "[WARN] YOLOv8-pose 节点 GPU 负载瞬时过高",
+      "[WARN] 光线抖动异常，关键点跟踪反馈轻微误差"
     ];
-    setLogs(["[INIT] 系统启动完成，开启实时监测分析模块..."]);
+    setLogs([{ msg: "[INIT] 系统启动完成，加载核心神经网络...", level: 'INFO'}]);
     
+    // Sparse random warnings
     const t = setInterval(() => {
-      setLogs(curr => {
-        const timeStr = new Date().toISOString().substring(11, 23); // HH:mm:ss.SSS
+      if (Math.random() > 0.8) {
         const msg = msgs[Math.floor(Math.random() * msgs.length)];
-        const newLogs = [...curr, `[${timeStr}] ${msg}`];
-        if (newLogs.length > 50) return newLogs.slice(newLogs.length - 50);
-        return newLogs;
-      });
-    }, 1800);
+        addLog(msg, 'WARN');
+      }
+    }, 4500);
     return () => clearInterval(t);
   }, []);
+
+  const handlePostureChange = (newId: PostureId, name: string, isCorrect: boolean) => {
+    if (newId === activePostureId) return;
+    if (soundEnabled) playFeedbackSound(isCorrect);
+    setActivePostureId(newId);
+    addLog(`用户输入覆盖: 已无缝切换至姿态预设【${name}】视图`, isCorrect ? 'INFO' : 'WARN');
+  };
 
   return (
     <div className="min-h-screen font-sans tracking-wide selection:bg-[#165DFF]/30 overflow-x-hidden relative flex flex-col">
@@ -410,12 +431,7 @@ export default function App() {
                     key={p.id}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      if (soundEnabled && p.id !== activePostureId) {
-                        playFeedbackSound(p.isCorrect);
-                      }
-                      setActivePostureId(p.id);
-                    }}
+                    onClick={() => handlePostureChange(p.id, p.name, p.isCorrect)}
                     className={baseStyle}
                   >
                     {p.name}
@@ -426,15 +442,29 @@ export default function App() {
           </div>
 
           {/* 5. Terminal Logs (Bento: Bottom Right) */}
-          <div className="md:col-span-2 lg:col-span-5 xl:col-span-4 h-full min-h-[160px] md:min-h-[220px] glass-card p-4 md:p-5 flex flex-col shadow-inner">
-            <div className="flex items-center gap-2 mb-2 text-xs text-slate-400 font-mono border-b border-slate-800 pb-2">
-              <MonitorPlay className="w-4 h-4 text-[#165DFF]" />
-              [终端] VISION.AI_CORE/LOGS
+          <div className="md:col-span-2 lg:col-span-5 xl:col-span-4 glass-card flex flex-col shadow-inner overflow-hidden transition-all duration-300 relative border-t-2 border-t-slate-800">
+            {/* Header / Toggle */}
+            <div 
+              onClick={() => setLogsExpanded(!logsExpanded)}
+              className="px-4 md:px-5 py-3 cursor-pointer hover:bg-slate-800/40 border-b border-slate-800 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
+                <MonitorPlay className="w-4 h-4 text-[#165DFF]" />
+                [终端] VISION.AI_CORE/LOGS
+              </div>
+              <div className="text-[10px] text-slate-500 font-mono flex gap-2">
+                <span>FILTER: WARNING+</span>
+                <span className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">{logsExpanded ? 'COLLAPSE (-)' : 'EXPAND (+)'}</span>
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto font-mono text-[11px] text-cyan-300/60 leading-relaxed flex flex-col-reverse">
-              {logs.map((log, i) => (
-                <div key={i} className="hover:text-cyan-300 transition-colors">
-                  {log}
+
+            {/* Log Body */}
+            <div 
+              className={`px-4 md:px-5 pb-4 font-mono text-[11px] leading-relaxed flex flex-col-reverse overflow-y-auto transition-all duration-500 ${logsExpanded ? 'max-h-[300px]' : 'max-h-[140px]'}`}
+            >
+              {(logsExpanded ? logs : logs.slice(-5)).map((logObj, i) => (
+                <div key={i} className={`mt-1 hover:brightness-125 transition-all text-shadow-sm ${logObj.level === 'WARN' ? 'text-amber-400' : 'text-cyan-300/80'}`}>
+                  {logObj.msg}
                 </div>
               ))}
             </div>

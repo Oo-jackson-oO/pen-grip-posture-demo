@@ -32,5 +32,4 @@ coverage/
 *.sw?
 
 # Project specific
-reference/
 build_pose_data.mjs

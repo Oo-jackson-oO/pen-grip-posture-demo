@@ -1,0 +1,39 @@
+name: Deploy to GitHub Pages
+
+on:
+  # 在推送到 main 分支时触发
+  push:
+    branches:
+      - main
+  # 允许手动触发
+  workflow_dispatch:
+
+# 赋予 GITHUB_TOKEN 写入仓库的权限，以便能够推送到 gh-pages 分支
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          commit_message: "deploy: 自动通过 GitHub Actions 部署最新更改"
